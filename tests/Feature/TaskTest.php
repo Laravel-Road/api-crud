@@ -3,8 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class TaskTest extends TestCase
@@ -18,6 +20,7 @@ class TaskTest extends TestCase
     public function taskIndex()
     {
         // Arrange
+        Sanctum::actingAs(User::factory()->create());
         Task::factory($total = $this->faker->numberBetween(15, 50))->create();
 
         // Act
@@ -35,6 +38,7 @@ class TaskTest extends TestCase
     public function taskStore()
     {
         // Arrange
+        Sanctum::actingAs(User::factory()->create());
         $taskFake = Task::factory()->make();
 
         // Act
@@ -51,6 +55,7 @@ class TaskTest extends TestCase
     public function taskShow()
     {
         // Arrange
+        Sanctum::actingAs(User::factory()->create());
         $task = Task::factory()->create();
 
         // Act
@@ -68,6 +73,7 @@ class TaskTest extends TestCase
     public function taskUpdate()
     {
         // Arrange
+        Sanctum::actingAs(User::factory()->create());
         $task = Task::factory()->create();
         $taskFake = Task::factory()->make();
 
@@ -85,6 +91,7 @@ class TaskTest extends TestCase
     public function taskDestroy()
     {
         // Arrange
+        Sanctum::actingAs(User::factory()->create());
         $task = Task::factory()->create();
 
         // Act
