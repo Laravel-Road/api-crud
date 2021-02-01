@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TaskCollection;
 use App\Models\Task;
 use Illuminate\Http\Request;
 
@@ -10,11 +11,11 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return TaskCollection
      */
     public function index()
     {
-        return Task::paginate();
+        return new TaskCollection(Task::paginate());
     }
 
     /**

@@ -26,7 +26,7 @@ class TaskTest extends TestCase
         // Assert
         $response
             ->assertOk()
-            ->assertJsonPath('total', $total);
+            ->assertJsonPath('meta.total', $total);
     }
 
     /**
