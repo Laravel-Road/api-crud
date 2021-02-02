@@ -38,14 +38,17 @@ class TaskTest extends TestCase
     public function taskStore()
     {
         // Arrange
-        Sanctum::actingAs(User::factory()->create());
+        Sanctum::actingAs($user = User::factory()->create());
         $taskFake = Task::factory()->make();
 
         // Act
         $response = $this->json('POST', route('tasks.store'), $taskFake->toArray());
 
         // Assert
-        $response->assertCreated();
+        $response
+            ->assertCreated()
+            ->assertJsonPath('data.user_id', $user->id);
+
         $this->assertDatabaseHas('tasks', $taskFake->getAttributes());
     }
 
@@ -100,5 +103,25 @@ class TaskTest extends TestCase
         // Assert
         $response->assertNoContent();
         $this->assertDatabaseMissing('tasks', $task->getAttributes());
+    }
+
+    /**
+     * @test
+     */
+    public function cannotDestroyAnotherUserTask()
+    {
+        // Arrange
+        Sanctum::actingAs($user = User::factory()->create());
+        $anotherUser = User::factory()->create();
+        $task = Task::factory()->create([
+            'user_id' => $anotherUser->id,
+        ]);
+
+        // Act
+        $response = $this->json('DELETE', route('tasks.destroy', $task));
+
+        // Assert
+        $response->assertForbidden();
+        $this->assertDatabaseHas('tasks', $task->getAttributes());
     }
 }
