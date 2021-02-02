@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\TokenController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,4 +20,6 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::get('/user', fn(Request $request) => $request->user());
 
     Route::apiResource('tasks', TaskController::class);
+
+    Route::apiResource('tokens', TokenController::class)->only(['store', 'destroy']);
 });
